@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+.Python
+.venv/
+venv/
+*.egg-info/
+.eggs/
+sandbox_out/

@@ -20,13 +20,10 @@ Each entry on a line represents a single event. Here is what is inside:
 
 - **Duration:** Measured in beats (also called cycles), this tells you how long the event occupies the lane. To get the time in seconds, multiply the duration by 60, then divide by the asset's tempo in beats per minute. Because the tempo is kept at the asset level, you can speed up or slow down playback without ever having to rewrite the notes themselves.
 - **Note number:** The standard MIDI pitch, 0 through 127. If the event is a rest, this is ignored.
-- **Velocity:** The standard MIDI velocity, 0 through 127. If the event is a rest, this is ignored. A velocity of zero means silence, but it does *not* mean the event is a rest.
-- **Rest:** If this is present and `true`, the lane simply advances by the duration without making a sound. If it is missing, the event is a regular note.
-- **Color:** A visual marker (orange, yellow, green, cyan, blue, magenta, or fuchsia).
-- **Major:** The chord context of the event (either major or minor).
-- **Sharps:** When `true`, this selects sharp spelling.
+- **Velocity:** The standard MIDI velocity, 0 through 127. If the event is a rest, this is ignored. A velocity of zero means silence, and can also be used to create a rest.
+- **Rest:** If this is present and `true`, the lane simply advances by the duration without making a sound. If it is missing, the event is a regular note unless velocity is 0.
 
-Sound is scheduled when the event is not a rest and the velocity is above zero.
+Sound is scheduled when the event is not a rest and the velocity is above zero. Rests can be created either by setting `is_rest: true` OR by setting `velocity: 0`. Monic Theory explicitly sets both when culling duplicate voices to reinforce the concept of silence while preserving the beatgrid.
 
 ## Difference from Standard MIDI Format
 

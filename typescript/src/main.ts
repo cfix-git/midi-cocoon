@@ -11,6 +11,7 @@ import {
   type InstantiateQuery,
 } from "./bodies.ts";
 import { die, request, writeAndCheck, writeJson } from "./client.ts";
+import { runTupletQuartet } from "./tuplet_quartet.ts";
 
 const OUT_DIR = fileURLToPath(new URL("../sandbox_out", import.meta.url));
 const GENRES_DIR = path.join(OUT_DIR, "preset-genres");
@@ -185,6 +186,8 @@ async function runExample(): Promise<void> {
   await fetchVisualMidi(visualResults);
   const cohortTracks = await samplePackCohort();
   await fetchSamplePack(cohortTracks);
+  // Custom genre: duple, triplet, quintuplet, and septuplet. See tuplet_quartet.ts.
+  await runTupletQuartet(OUT_DIR);
   console.log("done");
 }
 

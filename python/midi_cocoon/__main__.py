@@ -12,6 +12,7 @@ from .bodies import (
     cohort_request_from_query,
 )
 from .client import die, request, write_and_check, write_json
+from .tuplet_quartet import run_tuplet_quartet
 
 HERE = Path(__file__).resolve().parent
 OUT_DIR = HERE / "sandbox_out"
@@ -164,7 +165,7 @@ def fetch_sample_pack(tracks: list) -> None:
 
 
 def run_example() -> None:
-    """Run the six demo steps."""
+    """Run the demo steps, ending with the tuplet quartet custom genre."""
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     print("𝄞 Welcome to the Monic Theory Developer API 𝄢")
     # Contact the administrator for rate limits.
@@ -174,6 +175,8 @@ def run_example() -> None:
     fetch_visual_midi(visual_results)
     cohort_tracks = sample_pack_cohort()
     fetch_sample_pack(cohort_tracks)
+    # Custom genre: duple, triplet, quintuplet, and septuplet. See tuplet_quartet.py.
+    run_tuplet_quartet(OUT_DIR)
     print("done")
 
 

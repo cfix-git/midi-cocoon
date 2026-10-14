@@ -7,6 +7,7 @@ off and each tuplet plays as written.
 
 run_example in __main__.py calls run_tuplet_quartet. Set ORG and BEARER in client.py, then
 python -m midi_cocoon. Files land in midi_cocoon/sandbox_out/custom-genres/.
+Be wary of rate limits when running batch production examples! 
 """
 
 from __future__ import annotations

@@ -8,6 +8,7 @@
  *
  * runExample in main.ts calls runTupletQuartet. Set ORG and BEARER in client.ts, then npm start.
  * Files land in sandbox_out/custom-genres/.
+ * Be wary of rate limits when running batch production examples! 
  */
 
 import { mkdirSync } from "node:fs";

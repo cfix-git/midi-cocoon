@@ -11,7 +11,7 @@ import { key_signature } from "./key_signature";
 import { modality } from "./modality";
 import { energy_level } from "./energy_level";
 
-export function trope_setting(track_scale_val: string | number, articulation_val: string | number, stem_kind_val: string, pc: number): Record<string, any> {
+export function trope_setting(track_scale_val: string | number, articulation_val: string | number, stem_kind_val: string | number, pc: number): Record<string, any> {
   return {
     track_scale: time_scale(track_scale_val),
     articulation: articulation(articulation_val),
@@ -24,7 +24,7 @@ export function labelled(rhythm: string | number): Record<string, any> {
   return { Labelled: labelled_rhythm(rhythm) };
 }
 
-export function simple_euc_rhythm(density_val: string | number, even_odd_val: string | boolean, time_scale_val: string | number, coefficient: [number, number] | number[]): Record<string, any> {
+export function simple_euc_rhythm(density_val: string | number, even_odd_val: string | number | boolean, time_scale_val: string | number, coefficient: [number, number] | number[]): Record<string, any> {
   return {
     SimpleEuc: {
       density: density(density_val),
@@ -86,7 +86,7 @@ export function trope(label: string, setting: any, rhythm: any, harf: any, marf:
   };
 }
 
-export function register(reg: number, form_patterns: string[], tropes: any[]): Record<string, any> {
+export function register(reg: number, form_patterns: (string | number)[], tropes: any[]): Record<string, any> {
   return {
     register: reg,
     form_patterns: form_patterns.map((fp) => form_pattern(fp)),
@@ -101,7 +101,7 @@ export function score_profile(
   time_signature_val: string | number,
   key_signature_val: string | number,
   in_major: boolean,
-  modality_val: string,
+  modality_val: string | number,
   max_richness_val: string | number
 ): Record<string, any> {
   return {

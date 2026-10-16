@@ -9,13 +9,17 @@ class StemKind(str, Enum):
 
 def stem_kind(value):
     message = f"Unsupported value for stem_kind: {value}. Try one of: Instrumental, Beat"
+    if isinstance(value, bool):
+        raise ValueError(message)
     if isinstance(value, str):
         wire = {
             "instrumental": "Instrumental",
-            "Instrumental": "Instrumental",
             "beat": "Beat",
-            "Beat": "Beat",
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
+    ids = ["Instrumental", "Beat"]
+    if type(value) is int and 0 <= value < len(ids):
+        return ids[value]
     raise ValueError(message)

@@ -10,15 +10,18 @@ class RhythmMode(str, Enum):
 
 def rhythm_mode(value):
     message = f"Unsupported value for rhythm_mode: {value}. Try one of: SimpleEuc, SimpleHarmonic, PositionedEuc"
+    if isinstance(value, bool):
+        raise ValueError(message)
     if isinstance(value, str):
         wire = {
             "simpleeuc": "SimpleEuc",
-            "SimpleEuc": "SimpleEuc",
             "simpleharmonic": "SimpleHarmonic",
-            "SimpleHarmonic": "SimpleHarmonic",
             "positionedeuc": "PositionedEuc",
-            "PositionedEuc": "PositionedEuc",
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
+    ids = ["SimpleEuc", "SimpleHarmonic", "PositionedEuc"]
+    if type(value) is int and 0 <= value < len(ids):
+        return ids[value]
     raise ValueError(message)

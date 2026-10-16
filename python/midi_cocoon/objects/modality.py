@@ -14,23 +14,22 @@ class Modality(str, Enum):
 
 def modality(value):
     message = f"Unsupported value for modality: {value}. Try one of: Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian"
+    if isinstance(value, bool):
+        raise ValueError(message)
     if isinstance(value, str):
         wire = {
             "ionian": "Ionian",
-            "Ionian": "Ionian",
             "dorian": "Dorian",
-            "Dorian": "Dorian",
             "phrygian": "Phrygian",
-            "Phrygian": "Phrygian",
             "lydian": "Lydian",
-            "Lydian": "Lydian",
             "mixolydian": "Mixolydian",
-            "Mixolydian": "Mixolydian",
             "aeolian": "Aeolian",
-            "Aeolian": "Aeolian",
             "locrian": "Locrian",
-            "Locrian": "Locrian",
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
+    ids = ["Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian"]
+    if type(value) is int and 0 <= value < len(ids):
+        return ids[value]
     raise ValueError(message)

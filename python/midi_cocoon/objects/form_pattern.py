@@ -19,33 +19,35 @@ class FormPattern(str, Enum):
 
 def form_pattern(value):
     message = f"Unsupported value for form_pattern: {value}. Try one of: Loop, Binary, Ternary, CallResponse, ThemeVariations, Stream, LoopClosed, LoopClosedRev, LoopOpen, LoopOpenRev, LoopUntil, LoopUntilRev"
+    if isinstance(value, bool):
+        raise ValueError(message)
     if isinstance(value, str):
         wire = {
             "loop": "Loop",
-            "Loop": "Loop",
             "binary": "Binary",
-            "Binary": "Binary",
             "ternary": "Ternary",
-            "Ternary": "Ternary",
             "call_response": "CallResponse",
-            "CallResponse": "CallResponse",
+            "callresponse": "CallResponse",
             "theme_variations": "ThemeVariations",
-            "ThemeVariations": "ThemeVariations",
+            "themevariations": "ThemeVariations",
             "stream": "Stream",
-            "Stream": "Stream",
             "loop_closed": "LoopClosed",
-            "LoopClosed": "LoopClosed",
+            "loopclosed": "LoopClosed",
             "loop_closed_rev": "LoopClosedRev",
-            "LoopClosedRev": "LoopClosedRev",
+            "loopclosedrev": "LoopClosedRev",
             "loop_open": "LoopOpen",
-            "LoopOpen": "LoopOpen",
+            "loopopen": "LoopOpen",
             "loop_open_rev": "LoopOpenRev",
-            "LoopOpenRev": "LoopOpenRev",
+            "loopopenrev": "LoopOpenRev",
             "loop_until": "LoopUntil",
-            "LoopUntil": "LoopUntil",
+            "loopuntil": "LoopUntil",
             "loop_until_rev": "LoopUntilRev",
-            "LoopUntilRev": "LoopUntilRev",
+            "loopuntilrev": "LoopUntilRev",
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
+    ids = ["Loop", "Binary", "Ternary", "CallResponse", "ThemeVariations", "Stream", "LoopClosed", "LoopClosedRev", "LoopOpen", "LoopOpenRev", "LoopUntil", "LoopUntilRev"]
+    if type(value) is int and 0 <= value < len(ids):
+        return ids[value]
     raise ValueError(message)

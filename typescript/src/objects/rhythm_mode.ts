@@ -7,18 +7,22 @@ export const RhythmMode = {
 
 export type RhythmMode = typeof RhythmMode[keyof typeof RhythmMode];
 
-export function rhythm_mode(value: string): string {
+export function rhythm_mode(value: string | number): string {
   const message = `Unsupported value for rhythm_mode: ${String(value)}. Try one of: SimpleEuc, SimpleHarmonic, PositionedEuc`;
   const wire: Record<string, string> = {
     "simpleeuc": "SimpleEuc",
-    "SimpleEuc": "SimpleEuc",
     "simpleharmonic": "SimpleHarmonic",
-    "SimpleHarmonic": "SimpleHarmonic",
     "positionedeuc": "PositionedEuc",
-    "PositionedEuc": "PositionedEuc",
   };
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  const ids: string[] = ["SimpleEuc", "SimpleHarmonic", "PositionedEuc"];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
+  }
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value < ids.length) {
+    return ids[value];
   }
   throw new Error(message);
 }

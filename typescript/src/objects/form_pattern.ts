@@ -16,36 +16,39 @@ export const FormPattern = {
 
 export type FormPattern = typeof FormPattern[keyof typeof FormPattern];
 
-export function form_pattern(value: string): string {
+export function form_pattern(value: string | number): string {
   const message = `Unsupported value for form_pattern: ${String(value)}. Try one of: Loop, Binary, Ternary, CallResponse, ThemeVariations, Stream, LoopClosed, LoopClosedRev, LoopOpen, LoopOpenRev, LoopUntil, LoopUntilRev`;
   const wire: Record<string, string> = {
     "loop": "Loop",
-    "Loop": "Loop",
     "binary": "Binary",
-    "Binary": "Binary",
     "ternary": "Ternary",
-    "Ternary": "Ternary",
     "call_response": "CallResponse",
-    "CallResponse": "CallResponse",
+    "callresponse": "CallResponse",
     "theme_variations": "ThemeVariations",
-    "ThemeVariations": "ThemeVariations",
+    "themevariations": "ThemeVariations",
     "stream": "Stream",
-    "Stream": "Stream",
     "loop_closed": "LoopClosed",
-    "LoopClosed": "LoopClosed",
+    "loopclosed": "LoopClosed",
     "loop_closed_rev": "LoopClosedRev",
-    "LoopClosedRev": "LoopClosedRev",
+    "loopclosedrev": "LoopClosedRev",
     "loop_open": "LoopOpen",
-    "LoopOpen": "LoopOpen",
+    "loopopen": "LoopOpen",
     "loop_open_rev": "LoopOpenRev",
-    "LoopOpenRev": "LoopOpenRev",
+    "loopopenrev": "LoopOpenRev",
     "loop_until": "LoopUntil",
-    "LoopUntil": "LoopUntil",
+    "loopuntil": "LoopUntil",
     "loop_until_rev": "LoopUntilRev",
-    "LoopUntilRev": "LoopUntilRev",
+    "loopuntilrev": "LoopUntilRev",
   };
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  const ids: string[] = ["Loop", "Binary", "Ternary", "CallResponse", "ThemeVariations", "Stream", "LoopClosed", "LoopClosedRev", "LoopOpen", "LoopOpenRev", "LoopUntil", "LoopUntilRev"];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
+  }
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value < ids.length) {
+    return ids[value];
   }
   throw new Error(message);
 }

@@ -11,17 +11,19 @@ class BreathBand(str, Enum):
 
 def breath_band(value):
     message = f"Unsupported value for breath_band: {value}. Try one of: B1, B2, B3, B4"
+    if isinstance(value, bool):
+        raise ValueError(message)
     if isinstance(value, str):
         wire = {
             "b1": "B1",
-            "B1": "B1",
             "b2": "B2",
-            "B2": "B2",
             "b3": "B3",
-            "B3": "B3",
             "b4": "B4",
-            "B4": "B4",
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
+    ids = ["B1", "B2", "B3", "B4"]
+    if type(value) is int and 0 <= value < len(ids):
+        return ids[value]
     raise ValueError(message)

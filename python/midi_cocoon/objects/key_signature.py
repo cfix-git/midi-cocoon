@@ -41,8 +41,9 @@ def key_signature(value):
             "10": 10, "as": 10, "asharp": 10, "a#": 10, "a♯": 10, "bf": 10, "bflat": 10, "bb": 10, "b♭": 10,
             "11": 11, "b": 11,
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
     if type(value) is int and 0 <= value <= 11:
         return value
     raise ValueError(message)

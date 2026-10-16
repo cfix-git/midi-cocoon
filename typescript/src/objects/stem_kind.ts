@@ -6,16 +6,21 @@ export const StemKind = {
 
 export type StemKind = typeof StemKind[keyof typeof StemKind];
 
-export function stem_kind(value: string): string {
+export function stem_kind(value: string | number): string {
   const message = `Unsupported value for stem_kind: ${String(value)}. Try one of: Instrumental, Beat`;
   const wire: Record<string, string> = {
     "instrumental": "Instrumental",
-    "Instrumental": "Instrumental",
     "beat": "Beat",
-    "Beat": "Beat",
   };
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  const ids: string[] = ["Instrumental", "Beat"];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
+  }
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value < ids.length) {
+    return ids[value];
   }
   throw new Error(message);
 }

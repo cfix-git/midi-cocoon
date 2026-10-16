@@ -11,9 +11,15 @@ def even_odd(value):
     message = f"Unsupported value for even_odd: {value}. Try one of: syncopated, clockwork"
     if isinstance(value, bool):
         return value
-    if isinstance(value, str):
-        if value == "syncopated":
+    if type(value) is int:
+        if value == 0:
             return False
-        if value == "clockwork":
+        if value == 1:
+            return True
+    if isinstance(value, str):
+        key = value.strip().lower()
+        if key == "syncopated":
+            return False
+        if key == "clockwork":
             return True
     raise ValueError(message)

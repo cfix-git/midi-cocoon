@@ -37,8 +37,11 @@ export function key_signature(value: string | number): number {
     "10": 10, "as": 10, "asharp": 10, "a#": 10, "a♯": 10, "bf": 10, "bflat": 10, "bb": 10, "b♭": 10,
     "11": 11, "b": 11,
   };
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
   }
   if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= 11) {
     return value;

@@ -11,26 +11,26 @@ export const Modality = {
 
 export type Modality = typeof Modality[keyof typeof Modality];
 
-export function modality(value: string): string {
+export function modality(value: string | number): string {
   const message = `Unsupported value for modality: ${String(value)}. Try one of: Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian`;
   const wire: Record<string, string> = {
     "ionian": "Ionian",
-    "Ionian": "Ionian",
     "dorian": "Dorian",
-    "Dorian": "Dorian",
     "phrygian": "Phrygian",
-    "Phrygian": "Phrygian",
     "lydian": "Lydian",
-    "Lydian": "Lydian",
     "mixolydian": "Mixolydian",
-    "Mixolydian": "Mixolydian",
     "aeolian": "Aeolian",
-    "Aeolian": "Aeolian",
     "locrian": "Locrian",
-    "Locrian": "Locrian",
   };
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  const ids: string[] = ["Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian"];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
+  }
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value < ids.length) {
+    return ids[value];
   }
   throw new Error(message);
 }

@@ -10,12 +10,18 @@ class SeedKind(str, Enum):
 
 def seed_kind(value):
     message = f"Unsupported value for seed_kind: {value}. Try one of: off, auto, manual"
+    if isinstance(value, bool):
+        raise ValueError(message)
     if isinstance(value, str):
         wire = {
             "off": "off",
             "auto": "auto",
             "manual": "manual",
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
+    ids = ["off", "auto", "manual"]
+    if type(value) is int and 0 <= value < len(ids):
+        return ids[value]
     raise ValueError(message)

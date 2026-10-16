@@ -15,8 +15,11 @@ export function voice_type(value: string | number): number {
     fullchord: 2,
   };
   const ids: number[] = [0, 1, 2];
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
   }
   if (typeof value === "number" && Number.isInteger(value) && ids.includes(value)) {
     return value;

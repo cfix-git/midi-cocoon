@@ -19,6 +19,8 @@ class PresetGenre(str, Enum):
 
 def preset_genre(value):
     message = f"Unsupported value for preset_genre: {value}. Try one of: techno, trance, house, downtempo, light_air, dark_mood, bedtime_drones, open_zones, trap, boom_bap, rap, drill"
+    if isinstance(value, bool):
+        raise ValueError(message)
     if isinstance(value, str):
         wire = {
             "techno": "techno",
@@ -34,6 +36,10 @@ def preset_genre(value):
             "rap": "rap",
             "drill": "drill",
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
+    ids = ["techno", "trance", "house", "downtempo", "light_air", "dark_mood", "bedtime_drones", "open_zones", "trap", "boom_bap", "rap", "drill"]
+    if type(value) is int and 0 <= value < len(ids):
+        return ids[value]
     raise ValueError(message)

@@ -6,16 +6,19 @@ export const EvenOdd = {
 
 export type EvenOdd = typeof EvenOdd[keyof typeof EvenOdd];
 
-export function even_odd(value: string | boolean): boolean {
+export function even_odd(value: string | number | boolean): boolean {
   const message = `Unsupported value for even_odd: ${String(value)}. Try one of: syncopated, clockwork`;
   if (typeof value === "boolean") {
     return value;
   }
-  if (value === "syncopated") {
-    return false;
+  if (typeof value === "number" && Number.isInteger(value)) {
+    if (value === 0) return false;
+    if (value === 1) return true;
   }
-  if (value === "clockwork") {
-    return true;
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (key === "syncopated") return false;
+    if (key === "clockwork") return true;
   }
   throw new Error(message);
 }

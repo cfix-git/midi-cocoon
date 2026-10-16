@@ -22,20 +22,21 @@ def time_signature(value):
         raise ValueError(message)
     if isinstance(value, str):
         wire = {
-            "2": 2, "two": 2,
-            "3": 3, "three": 3,
-            "4": 4, "four": 4,
-            "5": 5, "five": 5,
-            "6": 6, "six": 6,
-            "7": 7, "seven": 7,
-            "8": 8, "eight": 8,
-            "9": 9, "nine": 9,
-            "10": 10, "ten": 10,
-            "11": 11, "eleven": 11,
-            "12": 12, "twelve": 12,
+            "2": 2, "two": 2, "2/4": 2,
+            "3": 3, "three": 3, "3/4": 3,
+            "4": 4, "four": 4, "4/4": 4,
+            "5": 5, "five": 5, "5/4": 5,
+            "6": 6, "six": 6, "6/8": 6,
+            "7": 7, "seven": 7, "7/8": 7,
+            "8": 8, "eight": 8, "8/8": 8,
+            "9": 9, "nine": 9, "9/8": 9,
+            "10": 10, "ten": 10, "10/8": 10,
+            "11": 11, "eleven": 11, "11/8": 11,
+            "12": 12, "twelve": 12, "12/8": 12,
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
     if type(value) is int and 2 <= value <= 12:
         return value
     raise ValueError(message)

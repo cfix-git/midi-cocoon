@@ -11,17 +11,19 @@ class TempoBand(str, Enum):
 
 def tempo_band(value):
     message = f"Unsupported value for tempo_band: {value}. Try one of: Adagio, Andante, Allegro, Presto"
+    if isinstance(value, bool):
+        raise ValueError(message)
     if isinstance(value, str):
         wire = {
             "adagio": "Adagio",
-            "Adagio": "Adagio",
             "andante": "Andante",
-            "Andante": "Andante",
             "allegro": "Allegro",
-            "Allegro": "Allegro",
             "presto": "Presto",
-            "Presto": "Presto",
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
+    ids = ["Adagio", "Andante", "Allegro", "Presto"]
+    if type(value) is int and 0 <= value < len(ids):
+        return ids[value]
     raise ValueError(message)

@@ -8,20 +8,23 @@ export const TempoBand = {
 
 export type TempoBand = typeof TempoBand[keyof typeof TempoBand];
 
-export function tempo_band(value: string): string {
+export function tempo_band(value: string | number): string {
   const message = `Unsupported value for tempo_band: ${String(value)}. Try one of: Adagio, Andante, Allegro, Presto`;
   const wire: Record<string, string> = {
     "adagio": "Adagio",
-    "Adagio": "Adagio",
     "andante": "Andante",
-    "Andante": "Andante",
     "allegro": "Allegro",
-    "Allegro": "Allegro",
     "presto": "Presto",
-    "Presto": "Presto",
   };
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  const ids: string[] = ["Adagio", "Andante", "Allegro", "Presto"];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
+  }
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value < ids.length) {
+    return ids[value];
   }
   throw new Error(message);
 }

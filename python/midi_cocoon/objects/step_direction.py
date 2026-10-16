@@ -9,13 +9,17 @@ class StepDirection(str, Enum):
 
 def step_direction(value):
     message = f"Unsupported value for step_direction: {value}. Try one of: Left, Right"
+    if isinstance(value, bool):
+        raise ValueError(message)
     if isinstance(value, str):
         wire = {
             "left": "Left",
-            "Left": "Left",
             "right": "Right",
-            "Right": "Right",
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
+    ids = ["Left", "Right"]
+    if type(value) is int and 0 <= value < len(ids):
+        return ids[value]
     raise ValueError(message)

@@ -14,8 +14,8 @@ export function pagination(pagenum: number = 1, limit: number = 6, offset: numbe
 
 export function visual_query(
   schema: number,
-  breath_band_val: string,
-  tempo_band_val: string,
+  breath_band_val: string | number,
+  tempo_band_val: string | number,
   n_breaths: number,
   in_major: boolean,
   max_richness_val: string | number,

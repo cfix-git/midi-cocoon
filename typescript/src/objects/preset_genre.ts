@@ -16,7 +16,7 @@ export const PresetGenre = {
 
 export type PresetGenre = typeof PresetGenre[keyof typeof PresetGenre];
 
-export function preset_genre(value: string): string {
+export function preset_genre(value: string | number): string {
   const message = `Unsupported value for preset_genre: ${String(value)}. Try one of: techno, trance, house, downtempo, light_air, dark_mood, bedtime_drones, open_zones, trap, boom_bap, rap, drill`;
   const wire: Record<string, string> = {
     "techno": "techno",
@@ -32,8 +32,15 @@ export function preset_genre(value: string): string {
     "rap": "rap",
     "drill": "drill",
   };
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  const ids: string[] = ["techno", "trance", "house", "downtempo", "light_air", "dark_mood", "bedtime_drones", "open_zones", "trap", "boom_bap", "rap", "drill"];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
+  }
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value < ids.length) {
+    return ids[value];
   }
   throw new Error(message);
 }

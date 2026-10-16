@@ -18,8 +18,9 @@ def articulation(value):
             "legato": 1,
             "tenuto": 2,
         }
-        if value in wire:
-            return wire[value]
+        key = value.strip().lower()
+        if key in wire:
+            return wire[key]
     if type(value) is int and value in [0, 1, 2]:
         return value
     raise ValueError(message)

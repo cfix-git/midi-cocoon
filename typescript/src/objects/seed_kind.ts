@@ -7,15 +7,22 @@ export const SeedKind = {
 
 export type SeedKind = typeof SeedKind[keyof typeof SeedKind];
 
-export function seed_kind(value: string): string {
+export function seed_kind(value: string | number): string {
   const message = `Unsupported value for seed_kind: ${String(value)}. Try one of: off, auto, manual`;
   const wire: Record<string, string> = {
     "off": "off",
     "auto": "auto",
     "manual": "manual",
   };
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  const ids: string[] = ["off", "auto", "manual"];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
+  }
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value < ids.length) {
+    return ids[value];
   }
   throw new Error(message);
 }

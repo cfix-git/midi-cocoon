@@ -6,16 +6,21 @@ export const StepDirection = {
 
 export type StepDirection = typeof StepDirection[keyof typeof StepDirection];
 
-export function step_direction(value: string): string {
+export function step_direction(value: string | number): string {
   const message = `Unsupported value for step_direction: ${String(value)}. Try one of: Left, Right`;
   const wire: Record<string, string> = {
     "left": "Left",
-    "Left": "Left",
     "right": "Right",
-    "Right": "Right",
   };
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  const ids: string[] = ["Left", "Right"];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
+  }
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value < ids.length) {
+    return ids[value];
   }
   throw new Error(message);
 }

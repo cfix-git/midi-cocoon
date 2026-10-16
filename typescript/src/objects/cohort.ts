@@ -11,7 +11,7 @@ export function clip(
   label: string,
   articulation_val: string | number,
   pc: number,
-  stem_kind_val: string,
+  stem_kind_val: string | number,
   track_scale_val: string | number,
   harf: any,
   marf: any,
@@ -54,7 +54,7 @@ export function score(
   harmonic_spread: number,
   key_signature_val: string | number,
   in_major: boolean,
-  modality_val: string,
+  modality_val: string | number,
   max_richness_val: string | number,
   harmonic_pouch: any
 ): Record<string, any> {

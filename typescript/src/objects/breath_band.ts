@@ -8,20 +8,23 @@ export const BreathBand = {
 
 export type BreathBand = typeof BreathBand[keyof typeof BreathBand];
 
-export function breath_band(value: string): string {
+export function breath_band(value: string | number): string {
   const message = `Unsupported value for breath_band: ${String(value)}. Try one of: B1, B2, B3, B4`;
   const wire: Record<string, string> = {
     "b1": "B1",
-    "B1": "B1",
     "b2": "B2",
-    "B2": "B2",
     "b3": "B3",
-    "B3": "B3",
     "b4": "B4",
-    "B4": "B4",
   };
-  if (typeof value === "string" && Object.prototype.hasOwnProperty.call(wire, value)) {
-    return wire[value];
+  const ids: string[] = ["B1", "B2", "B3", "B4"];
+  if (typeof value === "string") {
+    const key = value.trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(wire, key)) {
+      return wire[key];
+    }
+  }
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value < ids.length) {
+    return ids[value];
   }
   throw new Error(message);
 }

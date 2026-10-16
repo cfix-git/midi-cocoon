@@ -28,7 +28,7 @@ export function marf(
   depth: number,
   dynamic_val: (string | number)[] | string | number,
   melodic_offset: number,
-  modality_val: string,
+  modality_val: string | number,
   register: number,
   rotation_offset: number,
   same_q: boolean,
@@ -68,7 +68,7 @@ export function positioned_euc(hits: number, events: number, phase: number = 0, 
   };
 }
 
-export function simple_euc(density_val: string | number, even_odd_val: string | boolean): Record<string, any> {
+export function simple_euc(density_val: string | number, even_odd_val: string | number | boolean): Record<string, any> {
   return {
     kind: "SimpleEuc",
     density: density(density_val),

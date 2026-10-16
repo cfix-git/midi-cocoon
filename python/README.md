@@ -29,7 +29,7 @@ From this directory:
 python -m midi_cocoon
 ```
 
-The entry shows one menu: Run All, Visual Compose MIDILite, Visual Compose MIDI, All Genres MIDI, Custom Genre MIDI, and N-let Quartet MIDI Download. Run All calls health, then the preset-genre tour, visual compose, the Trap cohort, and the tuplet quartet. It does not call the Visual Compose MIDI download.
+The entry shows one menu. Run All is first and has no tier. Tier 1 and Tier 2 are headers and are not choices. The choices are Visual Compose MIDILite, Visual Compose MIDI, Simple Compose MIDILite, Simple Compose MIDI, Custom Genre MIDI, N-let Quartet MIDI Download, and All Genres MIDI. Run All calls health, then each of those choices in that order.
 
 The run stops on the first non-2xx response. A 429 says the limit refills each minute.
 
@@ -38,6 +38,8 @@ Run one example:
 ```bash
 python -m midi_cocoon.tier1.visual_compose
 python -m midi_cocoon.tier1.download_fetch
+python -m midi_cocoon.tier1.simple_compose
+python -m midi_cocoon.tier1.simple_compose_download
 python -m midi_cocoon.tier2.preset_genres
 python -m midi_cocoon.tier2.trap_cohort
 python -m midi_cocoon.tier2.tuplet_quartet
@@ -48,11 +50,12 @@ python -m midi_cocoon.tier2.tuplet_quartet
 Files are written under `midi_cocoon/sandbox_out`, which is ignored by git.
 
 1. `GET /health`
-2. For each preset genre, the client will fetch the template, instantiate it, run the cohort, and download the sample-pack zip file.
-3. `POST /api/visual_compose` and save the MIDILite JSON.
+2. `POST /api/visual_compose` and save the MIDILite JSON, then `POST /download/fetch`.
+3. `POST /api/simple_compose` and save the MIDILite JSON, then `POST /download/fetch`.
 4. `POST /api/sample-pack/cohort` with the bundled example, then download that sample-pack zip file.
 5. Build the tuplet quartet custom genre locally (duple, triplet, quintuplet, and septuplet tracks), instantiate it, run the cohort, and download the sample-pack zip file.
+6. For each preset genre, the client will fetch the template, instantiate it, run the cohort, and download the sample-pack zip file.
 
-Preset genre files land in `sandbox_out/preset-genres/`. The visual compose MIDILite file is `sandbox_out/visual_compose.out.json`. The example sample pack is `sandbox_out/sample_pack.zip`. The tuplet quartet files land in `sandbox_out/custom-genres/`.
+Preset genre files land in `sandbox_out/preset-genres/`. The visual compose MIDILite file is `sandbox_out/visual_compose.out.json`. The simple compose MIDILite file is `sandbox_out/simple_compose.out.json`. The example sample pack is `sandbox_out/sample_pack.zip`. The tuplet quartet files land in `sandbox_out/custom-genres/`.
 
-`python -m midi_cocoon.tier1.download_fetch` calls visual compose, then `POST /download/fetch`. One result is saved as `sandbox_out/visual_compose.mid`. More than one result is saved as `sandbox_out/visual_compose.zip`. The full run does not call it.
+`python -m midi_cocoon.tier1.download_fetch` calls visual compose, then `POST /download/fetch`. One result is saved as `sandbox_out/visual_compose.mid`. More than one result is saved as `sandbox_out/visual_compose.zip`. `python -m midi_cocoon.tier1.simple_compose_download` does the same for simple compose, as `sandbox_out/simple_compose.mid` or `sandbox_out/simple_compose.zip`.

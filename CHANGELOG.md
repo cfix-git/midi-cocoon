@@ -2,6 +2,17 @@
 
 Python and TypeScript versions move together. An entry names one package only when that package changes alone.
 
+## [1.0.4] - 2026-10-15
+
+### Added
+
+- Simple compose saves the MIDILite JSON. A separate example posts those results to `POST /download/fetch`.
+
+### Changed
+
+- The menu prints Tier 1 and Tier 2 as headers. Those lines are not choices.
+- Run All calls health, then every example, including both MIDI downloads. All Genres MIDI is last.
+
 ## [1.0.3] - 2026-10-15
 
 ### Changed

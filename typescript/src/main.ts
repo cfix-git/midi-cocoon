@@ -5,6 +5,8 @@ import { createInterface } from "node:readline/promises";
 import { fileURLToPath } from "node:url";
 import { die, request } from "./client";
 import { downloadFetch } from "./tier1/download_fetch";
+import { simpleCompose } from "./tier1/simple_compose";
+import { simpleComposeDownload } from "./tier1/simple_compose_download";
 import { visualCompose } from "./tier1/visual_compose";
 import { fetchAndInstantiateGenres } from "./tier2/preset_genres";
 import { fetchSamplePack, samplePackCohort } from "./tier2/trap_cohort";
@@ -29,6 +31,14 @@ async function downloadExample(): Promise<void> {
   await downloadFetch(await visualCompose());
 }
 
+async function simpleExample(): Promise<void> {
+  await simpleCompose();
+}
+
+async function simpleMidi(): Promise<void> {
+  await simpleComposeDownload(await simpleCompose());
+}
+
 async function tupletQuartet(): Promise<void> {
   await runTupletQuartet(OUT_DIR);
 }
@@ -37,30 +47,53 @@ async function visualExample(): Promise<void> {
   await visualCompose();
 }
 
-const runAll: Array<() => Promise<void>> = [
-  fetchAndInstantiateGenres,
-  visualExample,
-  trapCohort,
-  tupletQuartet,
-];
+type Entry = readonly [string, () => Promise<void>];
+type Row = string | Entry;
 
-const examples: Array<[string, () => Promise<void>]> = [
+async function runAll(): Promise<void> {
+  await health();
+  for (const row of menu) {
+    if (!Array.isArray(row) || row[0] === "Run All") {
+      continue;
+    }
+    await row[1]();
+  }
+  console.log("done");
+}
+
+const menu: Row[] = [
+  ["Run All", runAll],
+  "Tier 1",
   ["Visual Compose MIDILite", visualExample],
   ["Visual Compose MIDI", downloadExample],
-  ["All Genres MIDI", fetchAndInstantiateGenres],
+  ["Simple Compose MIDILite", simpleExample],
+  ["Simple Compose MIDI", simpleMidi],
+  "Tier 2",
   ["Custom Genre MIDI", trapCohort],
   ["N-let Quartet MIDI Download", tupletQuartet],
+  ["All Genres MIDI", fetchAndInstantiateGenres],
 ];
 
-async function choose(title: string, labels: string[]): Promise<number> {
+function choices(rows: Row[]): Entry[] {
+  return rows.filter((row): row is Entry => Array.isArray(row));
+}
+
+async function choose(title: string, rows: Row[]): Promise<number> {
+  const entries = choices(rows);
   while (true) {
     console.log(title);
-    for (let index = 0; index < labels.length; index += 1) {
-      console.log(`${index + 1}. ${labels[index]}`);
+    let number = 1;
+    for (const row of rows) {
+      if (typeof row === "string") {
+        console.log(row);
+        continue;
+      }
+      console.log(`${number}. ${row[0]}`);
+      number += 1;
     }
     const raw = (await input.question("> ")).trim();
     const choice = Number(raw);
-    if (Number.isInteger(choice) && choice >= 1 && choice <= labels.length) {
+    if (Number.isInteger(choice) && choice >= 1 && choice <= entries.length) {
       return choice;
     }
   }
@@ -70,19 +103,8 @@ async function runExample(): Promise<void> {
   mkdirSync(OUT_DIR, { recursive: true });
   console.log("𝄞 Welcome to the Monic Theory Developer API 𝄢");
   // Contact the administrator for rate limits.
-  const choice = await choose("How would you like to make more music?", [
-    "Run All",
-    ...examples.map(([label]) => label),
-  ]);
-  if (choice === 1) {
-    await health();
-    for (const step of runAll) {
-      await step();
-    }
-    console.log("done");
-    return;
-  }
-  const [, step] = examples[choice - 2];
+  const choice = await choose("How would you like to make more music?", menu);
+  const [, step] = choices(menu)[choice - 1];
   await step();
 }
 

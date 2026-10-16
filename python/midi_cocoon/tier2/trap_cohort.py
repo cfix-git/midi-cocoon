@@ -1,40 +1,11 @@
-"""Example request bodies for the Monic Theory API."""
+"""Trap cohort body, POST /api/sample-pack/cohort, and the sample-pack download."""
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 
-class VisualCompositionRequest:
-    """Visual compose request."""
-
-    @staticmethod
-    def example() -> dict:
-        """Return the visual compose body."""
-        return {
-            "pagination": {
-                "limit": 6,
-                "offset": 0,
-                "pagenum": 1,
-            },
-            "query": {
-                "breath_band": "B3",
-                "datetime": {
-                    "day": 15,
-                    "hour": 12,
-                    "minute": 0,
-                    "month": 9,
-                    "year": 2026,
-                },
-                "description": "",
-                "in_major": True,
-                "key_signature": 0,
-                "max_richness": 2,
-                "n_breaths": 3,
-                "schema": 3,
-                "tempo_band": "Andante",
-            },
-        }
-
-
+from ..client import die, request, write_and_check
 
 class TemplatedLoopScoreRequest:
     """Sample-pack cohort request."""
@@ -4237,31 +4208,43 @@ class TemplatedLoopScoreRequest:
         }
 
 
-
-def clip_cycles(clip: dict, time_signature: int) -> int:
-    """Beat-cycles for placement (monictypes::conductor::clip_cycles)."""
-    n_bars = int(clip.get("rarf", {}).get("n_bars", 0))
-    return n_bars * int(time_signature)
+OUT_DIR = Path(__file__).resolve().parents[1] / "sandbox_out"
 
 
-def cohort_request_from_query(query: dict) -> dict:
-    """TemplatedLoopScoreQuery timelines → TemplatedLoopScoreRequest."""
-    score = query["score"]
-    time_signature = int(score.get("time_signature", 4))
-    timelines = query.get("timelines") or []
-    tracks: list[list[dict]] = []
-    for timeline in timelines:
-        cycle_start = 0
-        placements: list[dict] = []
-        for spec in timeline:
-            clip = spec["arf"]
-            placements.append(
-                {
-                    "clip": clip,
-                    "cycle_start": cycle_start,
-                    "tacet": bool(spec.get("tacet", False)),
-                }
-            )
-            cycle_start += clip_cycles(clip, time_signature)
-        tracks.append(placements)
-    return {"score": score, "tracks": tracks}
+def sample_pack_cohort() -> list:
+    """POST the sample-pack cohort example and return its tracks."""
+    _status, raw, _ctype = request(
+        "POST",
+        "/api/sample-pack/cohort",
+        body=TemplatedLoopScoreRequest.example(),
+    )
+    cohort = json.loads(raw.decode("utf-8"))
+    tracks = cohort.get("results")
+    if not isinstance(tracks, list) or not tracks:
+        die("sample-pack/cohort: empty results")
+    print(f"ok sample-pack/cohort ({len(tracks)} track(s))")
+    return tracks
+
+
+def fetch_sample_pack(tracks: list) -> None:
+    """Download the sample-pack cohort as a zip."""
+    pack = {
+        "score": TemplatedLoopScoreRequest.example()["score"],
+        "tracks": tracks,
+    }
+    _status, zip_bytes, ctype = request(
+        "POST",
+        "/download/sample_pack/fetch",
+        body={"pack": pack},
+    )
+    write_and_check(
+        OUT_DIR / "sample_pack.zip",
+        zip_bytes,
+        b"PK",
+        f"fetch zip ({ctype})",
+    )
+
+
+if __name__ == "__main__":
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    fetch_sample_pack(sample_pack_cohort())

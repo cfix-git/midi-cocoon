@@ -13,8 +13,9 @@
 
 import { mkdirSync } from "node:fs";
 import path from "node:path";
-import { cohortRequestFromQuery, type InstantiateQuery } from "./bodies.ts";
-import { die, request, writeAndCheck, writeJson } from "./client.ts";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { cohortRequestFromQuery, type InstantiateQuery } from "../shared/cohort";
+import { die, request, writeAndCheck, writeJson } from "../client";
 
 type JsonObject = Record<string, unknown>;
 
@@ -201,4 +202,9 @@ export async function runTupletQuartet(outDir: string): Promise<void> {
     Buffer.from("PK"),
     `custom genre pack zip tuplet-quartet (${packResponse.contentType})`,
   );
+}
+
+if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+  const outDir = fileURLToPath(new URL("../../sandbox_out", import.meta.url));
+  await runTupletQuartet(outDir);
 }

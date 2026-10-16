@@ -15,8 +15,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .bodies import cohort_request_from_query
-from .client import die, request, write_and_check, write_json
+from ..shared.cohort import cohort_request_from_query
+from ..client import die, request, write_and_check, write_json
 
 # One track. events is both the tuple space and the note count. scale 0 is one bar; scale 1 is two bars.
 # label: clip label.
@@ -191,3 +191,9 @@ def run_tuplet_quartet(out_dir: Path) -> None:
         b"PK",
         f"custom genre pack zip tuplet-quartet ({ctype})",
     )
+
+
+if __name__ == "__main__":
+    out_dir = Path(__file__).resolve().parents[1] / "sandbox_out"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    run_tuplet_quartet(out_dir)

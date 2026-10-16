@@ -4221,7 +4221,7 @@ def sample_pack_cohort() -> list:
     cohort = json.loads(raw.decode("utf-8"))
     tracks = cohort.get("results")
     if not isinstance(tracks, list) or not tracks:
-        die("sample-pack/cohort: empty results")
+        die("The sample-pack cohort returned no tracks.")
     print(f"ok sample-pack/cohort ({len(tracks)} track(s))")
     return tracks
 

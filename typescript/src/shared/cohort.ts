@@ -26,7 +26,7 @@ export function cohortRequestFromQuery(
 ): Record<string, unknown> {
   const score = query.score;
   if (score === undefined) {
-    throw new Error("missing score");
+    throw new Error("The cohort request has no score.");
   }
   const timeSignature = Math.trunc(score.time_signature ?? 4);
   const timelines = query.timelines ?? [];

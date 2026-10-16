@@ -42,36 +42,31 @@ def fetch_and_instantiate_genres() -> None:
         _status, raw, _ctype = request("GET", f"/api/genre/{preset_genre_id}")
         template = json.loads(raw.decode("utf-8"))
         if not isinstance(template, dict) or not template:
-            die(f"genre {preset_genre_id}: empty template")
-        write_json(
-            GENRES_DIR / f"{preset_genre_id}.json",
-            template,
-            f"genre template {preset_genre_id}",
-        )
+            die(f"No template was returned for {preset_genre_id}.")
+        write_json(GENRES_DIR / f"{preset_genre_id}.out.json", template)
 
         _status, raw, _ctype = request(
             "POST", "/api/sample-pack/instantiate", body=template
         )
         query = json.loads(raw.decode("utf-8"))
         if not isinstance(query, dict) or not query:
-            die(f"instantiate {preset_genre_id}: empty query")
+            die(f"Could not instantiate {preset_genre_id}.")
         digest = content_hash(query)
         write_json(
-            GENRES_DIR / f"{preset_genre_id}.instantiated.{digest}.json",
+            GENRES_DIR / f"{preset_genre_id}.instantiated.{digest}.out.json",
             query,
-            f"genre instantiated {preset_genre_id}",
         )
 
         cohort_body = cohort_request_from_query(query)
         if not cohort_body["tracks"]:
-            die(f"genre {preset_genre_id}: instantiated query has no timelines")
+            die(f"{preset_genre_id} did not return a timeline.")
         _status, raw, _ctype = request(
             "POST", "/api/sample-pack/cohort", body=cohort_body
         )
         cohort = json.loads(raw.decode("utf-8"))
         tracks = cohort.get("results")
         if not isinstance(tracks, list) or not tracks:
-            die(f"genre {preset_genre_id}: empty cohort results")
+            die(f"{preset_genre_id} returned no tracks.")
         print(f"ok genre cohort {preset_genre_id} ({len(tracks)} track(s))")
 
         pack = {"score": cohort_body["score"], "tracks": tracks}

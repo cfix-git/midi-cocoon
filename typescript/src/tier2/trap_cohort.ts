@@ -4221,7 +4221,7 @@ export async function samplePackCohort(): Promise<unknown[]> {
   });
   const cohort: unknown = JSON.parse(response.raw.toString("utf8"));
   if (!isNonEmptyObject(cohort) || !nonEmptyArray(cohort.results)) {
-    die("sample-pack/cohort: empty results");
+    die("The sample-pack cohort returned no tracks.");
   }
   console.log(`ok sample-pack/cohort (${cohort.results.length} track(s))`);
   return cohort.results;

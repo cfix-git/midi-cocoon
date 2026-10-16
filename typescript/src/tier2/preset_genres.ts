@@ -67,39 +67,34 @@ export async function fetchAndInstantiateGenres(): Promise<void> {
     const templateResponse = await request("GET", `/api/genre/${presetGenreId}`);
     const template: unknown = JSON.parse(templateResponse.raw.toString("utf8"));
     if (!isNonEmptyObject(template)) {
-      die(`genre ${presetGenreId}: empty template`);
+      die(`No template was returned for ${presetGenreId}.`);
     }
-    writeJson(
-      path.join(GENRES_DIR, `${presetGenreId}.json`),
-      template,
-      `genre template ${presetGenreId}`,
-    );
+    writeJson(path.join(GENRES_DIR, `${presetGenreId}.out.json`), template);
 
     const instantiateResponse = await request("POST", "/api/sample-pack/instantiate", {
       body: template,
     });
     const query: unknown = JSON.parse(instantiateResponse.raw.toString("utf8"));
     if (!isNonEmptyObject(query)) {
-      die(`instantiate ${presetGenreId}: empty query`);
+      die(`Could not instantiate ${presetGenreId}.`);
     }
     const digest = contentHash(query);
     writeJson(
-      path.join(GENRES_DIR, `${presetGenreId}.instantiated.${digest}.json`),
+      path.join(GENRES_DIR, `${presetGenreId}.instantiated.${digest}.out.json`),
       query,
-      `genre instantiated ${presetGenreId}`,
     );
 
     const cohortBody = cohortRequestFromQuery(query as InstantiateQuery);
     const cohortTracks = cohortBody.tracks;
     if (!nonEmptyArray(cohortTracks)) {
-      die(`genre ${presetGenreId}: instantiated query has no timelines`);
+      die(`${presetGenreId} did not return a timeline.`);
     }
     const cohortResponse = await request("POST", "/api/sample-pack/cohort", {
       body: cohortBody,
     });
     const cohort: unknown = JSON.parse(cohortResponse.raw.toString("utf8"));
     if (!isNonEmptyObject(cohort) || !nonEmptyArray(cohort.results)) {
-      die(`genre ${presetGenreId}: empty cohort results`);
+      die(`${presetGenreId} returned no tracks.`);
     }
     const tracks = cohort.results;
     console.log(`ok genre cohort ${presetGenreId} (${tracks.length} track(s))`);

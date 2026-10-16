@@ -1,8 +1,8 @@
-/** Visual compose request, POST /api/visual_compose, and POST /download/fetch. */
+/** Visual compose request and POST /api/visual_compose. */
 
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { die, request, writeAndCheck } from "../client";
+import { die, request, writeJson } from "../client";
 
 export function visualCompositionExample(): Record<string, unknown> {
   return {
@@ -52,26 +52,15 @@ export async function visualCompose(): Promise<unknown[]> {
   });
   const compose: unknown = JSON.parse(response.raw.toString("utf8"));
   if (!isNonEmptyObject(compose) || !nonEmptyArray(compose.results)) {
-    die("visual_compose: empty results");
+    die("Visual compose returned no results.");
   }
   console.log(`ok visual_compose (${compose.results.length} result(s))`);
+  writeJson(path.join(OUT_DIR, "visual_compose.out.json"), compose);
   return compose.results;
-}
-
-export async function fetchVisualMidi(results: unknown[]): Promise<void> {
-  const response = await request("POST", "/download/fetch", {
-    body: { items: results },
-  });
-  writeAndCheck(
-    path.join(OUT_DIR, "visual_compose.mid"),
-    response.raw,
-    Buffer.from("MThd"),
-    `fetch mid (${response.contentType})`,
-  );
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const { mkdirSync } = await import("node:fs");
   mkdirSync(OUT_DIR, { recursive: true });
-  await fetchVisualMidi(await visualCompose());
+  await visualCompose();
 }

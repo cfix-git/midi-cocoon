@@ -1,11 +1,11 @@
-"""Visual compose request, POST /api/visual_compose, and POST /download/fetch."""
+"""Visual compose request and POST /api/visual_compose."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
-from ..client import die, request, write_and_check
+from ..client import die, request, write_json
 
 class VisualCompositionRequest:
     """Visual compose request."""
@@ -50,26 +50,12 @@ def visual_compose() -> list:
     compose = json.loads(raw.decode("utf-8"))
     results = compose.get("results")
     if not isinstance(results, list) or not results:
-        die("visual_compose: empty results")
+        die("Visual compose returned no results.")
     print(f"ok visual_compose ({len(results)} result(s))")
+    write_json(OUT_DIR / "visual_compose.out.json", compose)
     return results
-
-
-def fetch_visual_midi(results: list) -> None:
-    """Download the visual compose results as MIDI."""
-    _status, mid_bytes, ctype = request(
-        "POST",
-        "/download/fetch",
-        body={"items": results},
-    )
-    write_and_check(
-        OUT_DIR / "visual_compose.mid",
-        mid_bytes,
-        b"MThd",
-        f"fetch mid ({ctype})",
-    )
 
 
 if __name__ == "__main__":
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    fetch_visual_midi(visual_compose())
+    visual_compose()

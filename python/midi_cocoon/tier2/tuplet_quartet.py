@@ -141,7 +141,7 @@ def tuplet_quartet_template() -> dict:
 def run_tuplet_quartet(out_dir: Path) -> None:
     """Write the template, instantiate it, render the cohort, and download the sample-pack zip.
 
-    Writes tuplet-quartet.json, tuplet-quartet.instantiated.json, and tuplet-quartet.sample-pack.zip
+    Writes tuplet-quartet.out.json, tuplet-quartet.instantiated.out.json, and tuplet-quartet.sample-pack.zip
     under out_dir/custom-genres/.
     """
     genres_dir = out_dir / "custom-genres"
@@ -149,11 +149,7 @@ def run_tuplet_quartet(out_dir: Path) -> None:
 
     # Built locally. This example does not fetch a preset from GET /api/genre.
     template = tuplet_quartet_template()
-    write_json(
-        genres_dir / "tuplet-quartet.json",
-        template,
-        "custom genre template tuplet-quartet",
-    )
+    write_json(genres_dir / "tuplet-quartet.out.json", template)
 
     # Draw the clips. Rhythm seeds come back off, so the tuplets stay as authored.
     _status, raw, _ctype = request(
@@ -161,22 +157,18 @@ def run_tuplet_quartet(out_dir: Path) -> None:
     )
     query = json.loads(raw.decode("utf-8"))
     if not isinstance(query, dict) or not query:
-        die("instantiate tuplet-quartet: empty query")
-    write_json(
-        genres_dir / "tuplet-quartet.instantiated.json",
-        query,
-        "custom genre instantiated tuplet-quartet",
-    )
+        die("Could not instantiate tuplet-quartet.")
+    write_json(genres_dir / "tuplet-quartet.instantiated.out.json", query)
 
     cohort_body = cohort_request_from_query(query)
     if not cohort_body["tracks"]:
-        die("tuplet-quartet: instantiated query has no timelines")
+        die("tuplet-quartet did not return a timeline.")
     # Render one result per track.
     _status, raw, _ctype = request("POST", "/api/sample-pack/cohort", body=cohort_body)
     cohort = json.loads(raw.decode("utf-8"))
     tracks = cohort.get("results")
     if not isinstance(tracks, list) or not tracks:
-        die("tuplet-quartet: empty cohort results")
+        die("tuplet-quartet returned no tracks.")
     print(f"ok custom genre cohort tuplet-quartet ({len(tracks)} track(s))")
 
     # Download the rendered pack.

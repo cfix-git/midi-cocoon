@@ -148,7 +148,7 @@ function nonEmptyArray(value: unknown): value is unknown[] {
 
 /**
  * Write the template, instantiate it, render the cohort, and download the sample-pack zip.
- * Writes tuplet-quartet.json, tuplet-quartet.instantiated.json, and tuplet-quartet.sample-pack.zip
+ * Writes tuplet-quartet.out.json, tuplet-quartet.instantiated.out.json, and tuplet-quartet.sample-pack.zip
  * under outDir/custom-genres/.
  */
 export async function runTupletQuartet(outDir: string): Promise<void> {
@@ -157,11 +157,7 @@ export async function runTupletQuartet(outDir: string): Promise<void> {
 
   // Built locally. This example does not fetch a preset from GET /api/genre.
   const template = tupletQuartetTemplate();
-  writeJson(
-    path.join(genresDir, "tuplet-quartet.json"),
-    template,
-    "custom genre template tuplet-quartet",
-  );
+  writeJson(path.join(genresDir, "tuplet-quartet.out.json"), template);
 
   // Draw the clips. Rhythm seeds come back off, so the tuplets stay as authored.
   const instantiateResponse = await request("POST", "/api/sample-pack/instantiate", {
@@ -169,17 +165,13 @@ export async function runTupletQuartet(outDir: string): Promise<void> {
   });
   const query: unknown = JSON.parse(instantiateResponse.raw.toString("utf8"));
   if (!isNonEmptyObject(query)) {
-    die("instantiate tuplet-quartet: empty query");
+    die("Could not instantiate tuplet-quartet.");
   }
-  writeJson(
-    path.join(genresDir, "tuplet-quartet.instantiated.json"),
-    query,
-    "custom genre instantiated tuplet-quartet",
-  );
+  writeJson(path.join(genresDir, "tuplet-quartet.instantiated.out.json"), query);
 
   const cohortBody = cohortRequestFromQuery(query as InstantiateQuery);
   if (!nonEmptyArray(cohortBody.tracks)) {
-    die("tuplet-quartet: instantiated query has no timelines");
+    die("tuplet-quartet did not return a timeline.");
   }
   // Render one result per track.
   const cohortResponse = await request("POST", "/api/sample-pack/cohort", {
@@ -187,7 +179,7 @@ export async function runTupletQuartet(outDir: string): Promise<void> {
   });
   const cohort: unknown = JSON.parse(cohortResponse.raw.toString("utf8"));
   if (!isNonEmptyObject(cohort) || !nonEmptyArray(cohort.results)) {
-    die("tuplet-quartet: empty cohort results");
+    die("tuplet-quartet returned no tracks.");
   }
   const tracks = cohort.results;
   console.log(`ok custom genre cohort tuplet-quartet (${tracks.length} track(s))`);

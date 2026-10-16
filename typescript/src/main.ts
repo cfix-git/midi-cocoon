@@ -86,15 +86,30 @@ async function runExample(): Promise<void> {
   await step();
 }
 
+let closing = false;
+let finished = false;
+
 process.on("SIGINT", () => {
+  closing = true;
   process.exit(130);
 });
 process.on("SIGTERM", () => {
+  closing = true;
   process.exit(143);
 });
+input.on("close", () => {
+  if (finished || closing) {
+    return;
+  }
+  closing = true;
+  process.exit(130);
+});
 process.on("exit", () => {
-  console.log("Bye bye!");
+  if (closing) {
+    console.log("Bye bye!");
+  }
 });
 
 await runExample();
+finished = true;
 input.close();

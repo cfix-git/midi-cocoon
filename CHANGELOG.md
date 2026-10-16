@@ -7,7 +7,7 @@ Python and TypeScript versions move together. An entry names one package only wh
 ### Changed
 
 - The interactive menu asks "How would you like to make more music?" and lists Run All with each example on one level.
-- A catchable exit from the interactive entry prints `Bye bye!`.
+- A close of the interactive entry prints `Bye bye!`. A finished run does not.
 
 ## [1.0.2] - 2026-10-15
 

@@ -61,10 +61,7 @@ def choose(title: str, labels: list[str]) -> int:
         print(title)
         for index, label in enumerate(labels, start=1):
             print(f"{index}. {label}")
-        try:
-            raw = input("> ").strip()
-        except EOFError:
-            raise SystemExit(1) from None
+        raw = input("> ").strip()
         if raw.isdigit() and 1 <= int(raw) <= len(labels):
             return int(raw)
 
@@ -91,11 +88,6 @@ def run_example() -> None:
 if __name__ == "__main__":
     try:
         run_example()
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, EOFError):
         print("Bye bye!")
         raise SystemExit(130) from None
-    except SystemExit:
-        print("Bye bye!")
-        raise
-    else:
-        print("Bye bye!")

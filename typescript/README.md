@@ -8,6 +8,10 @@ In `src/client.ts`, set `ORG` and `BEARER`.
 
 The base URL is `https://dev.monictheory.com/<ORG>`. Product calls send `Authorization: Bearer <BEARER>`. The `GET /health` call does not send authorization.
 
+## Layout
+
+`src/client.ts` and `src/main.ts` sit beside `objects`, `shared`, `tier1`, and `tier2`. `src/objects/dynamic.ts` and `src/objects/index.ts` are written by the monictypes `export-clients` binary. The demo does not call `dynamic`.
+
 ## Run
 
 From this directory:
@@ -18,6 +22,15 @@ npm start
 ```
 
 The run stops on the first non-2xx response, including 429. It will print the status plus a short snippet of the response body.
+
+Run one example:
+
+```bash
+npx tsx src/tier1/visual_compose.ts
+npx tsx src/tier2/preset_genres.ts
+npx tsx src/tier2/trap_cohort.ts
+npx tsx src/tier2/tuplet_quartet.ts
+```
 
 ## Output
 

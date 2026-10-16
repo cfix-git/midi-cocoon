@@ -8,6 +8,10 @@ In `midi_cocoon/client.py`, set `ORG` and `BEARER`.
 
 The base URL is `https://dev.monictheory.com/<ORG>`. Product calls send `Authorization: Bearer <BEARER>`. The `GET /health` call does not send authorization.
 
+## Layout
+
+`client.py` and `__main__.py` sit beside `objects`, `shared`, `tier1`, and `tier2`. `objects/dynamic.py` and `objects/__init__.py` are written by the monictypes `export-clients` binary. The demo does not call `dynamic`.
+
 ## Run
 
 From this directory:
@@ -17,6 +21,15 @@ python -m midi_cocoon
 ```
 
 The run stops on the first non-2xx response, including 429. It will print the status plus a short snippet of the response body.
+
+Run one example:
+
+```bash
+python -m midi_cocoon.tier1.visual_compose
+python -m midi_cocoon.tier2.preset_genres
+python -m midi_cocoon.tier2.trap_cohort
+python -m midi_cocoon.tier2.tuplet_quartet
+```
 
 ## Output
 

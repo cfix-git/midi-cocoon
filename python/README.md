@@ -29,7 +29,7 @@ From this directory:
 python -m midi_cocoon
 ```
 
-The entry shows one menu: run all, visual compose, download fetch, preset genres, the Trap cohort, and the tuplet quartet. Run all calls health, then the preset-genre tour, visual compose, the Trap cohort, and the tuplet quartet. It does not call download fetch.
+The entry shows one menu: Run All, Visual Compose MIDILite, Visual Compose MIDI, All Genres MIDI, Custom Genre MIDI, and N-let Quartet MIDI Download. Run All calls health, then the preset-genre tour, visual compose, the Trap cohort, and the tuplet quartet. It does not call the Visual Compose MIDI download.
 
 The run stops on the first non-2xx response. A 429 says the limit refills each minute.
 

@@ -47,11 +47,11 @@ RUN_ALL: list[Callable[[], None]] = [
 ]
 
 EXAMPLES: list[tuple[str, Callable[[], None]]] = [
-    ("Visual compose", visual_compose),
-    ("Download fetch", download_example),
-    ("Preset genres", fetch_and_instantiate_genres),
-    ("Trap cohort", trap_cohort),
-    ("Tuplet quartet", tuplet_quartet),
+    ("Visual Compose MIDILite", visual_compose),
+    ("Visual Compose MIDI", download_example),
+    ("All Genres MIDI", fetch_and_instantiate_genres),
+    ("Custom Genre MIDI", trap_cohort),
+    ("N-let Quartet MIDI Download", tuplet_quartet),
 ]
 
 
@@ -75,8 +75,8 @@ def run_example() -> None:
     print("𝄞 Welcome to the Monic Theory Developer API 𝄢")
     # Contact the administrator for rate limits.
     choice = choose(
-        "Choose a run",
-        ["Run all", *[label for label, _fn in EXAMPLES]],
+        "How would you like to make more music?",
+        ["Run All", *[label for label, _fn in EXAMPLES]],
     )
     if choice == 1:
         health()
@@ -89,4 +89,13 @@ def run_example() -> None:
 
 
 if __name__ == "__main__":
-    run_example()
+    try:
+        run_example()
+    except KeyboardInterrupt:
+        print("Bye bye!")
+        raise SystemExit(130) from None
+    except SystemExit:
+        print("Bye bye!")
+        raise
+    else:
+        print("Bye bye!")

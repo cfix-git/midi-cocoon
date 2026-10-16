@@ -45,11 +45,11 @@ const runAll: Array<() => Promise<void>> = [
 ];
 
 const examples: Array<[string, () => Promise<void>]> = [
-  ["Visual compose", visualExample],
-  ["Download fetch", downloadExample],
-  ["Preset genres", fetchAndInstantiateGenres],
-  ["Trap cohort", trapCohort],
-  ["Tuplet quartet", tupletQuartet],
+  ["Visual Compose MIDILite", visualExample],
+  ["Visual Compose MIDI", downloadExample],
+  ["All Genres MIDI", fetchAndInstantiateGenres],
+  ["Custom Genre MIDI", trapCohort],
+  ["N-let Quartet MIDI Download", tupletQuartet],
 ];
 
 async function choose(title: string, labels: string[]): Promise<number> {
@@ -70,8 +70,8 @@ async function runExample(): Promise<void> {
   mkdirSync(OUT_DIR, { recursive: true });
   console.log("𝄞 Welcome to the Monic Theory Developer API 𝄢");
   // Contact the administrator for rate limits.
-  const choice = await choose("Choose a run", [
-    "Run all",
+  const choice = await choose("How would you like to make more music?", [
+    "Run All",
     ...examples.map(([label]) => label),
   ]);
   if (choice === 1) {
@@ -85,6 +85,16 @@ async function runExample(): Promise<void> {
   const [, step] = examples[choice - 2];
   await step();
 }
+
+process.on("SIGINT", () => {
+  process.exit(130);
+});
+process.on("SIGTERM", () => {
+  process.exit(143);
+});
+process.on("exit", () => {
+  console.log("Bye bye!");
+});
 
 await runExample();
 input.close();

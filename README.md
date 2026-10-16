@@ -1,6 +1,6 @@
 # midi-cocoon
 
-Python and TypeScript demos for the Monic Theory API. Version 1.0.2.
+Python and TypeScript demos for the Monic Theory API. Version 1.0.3.
 
 [monictheory.com](https://monictheory.com)
 
